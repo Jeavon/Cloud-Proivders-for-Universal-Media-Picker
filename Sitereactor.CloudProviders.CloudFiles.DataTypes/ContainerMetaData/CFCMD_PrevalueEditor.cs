@@ -1,0 +1,133 @@
+﻿using System;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Sitereactor.CloudProviders.DataTypes.PrevalueEditors;
+using Sitereactor.CloudProviders.Extensions;
+using umbraco.cms.businesslogic.datatype;
+
+namespace Sitereactor.CloudProviders.CloudFiles.DataTypes.ContainerMetaData
+{
+    public class CFCMD_PrevalueEditor : AbstractJsonPrevalueEditor
+    {
+        /// <summary>
+        /// TextBox control for the account username.
+        /// </summary>
+        private TextBox txtUsername;
+
+        /// <summary>
+        /// TextBox control for the account api key.
+        /// </summary>
+        private TextBox txtApiKey;
+
+        /// <summary>
+        /// DropDownList for selecting a default container.
+        /// </summary>
+        private DropDownList ddlDefaultContainer;
+
+        /// <summary>
+        /// DataType Options
+        /// </summary>
+        private CFCMD_Options cfcmd_options;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CFCMD_PrevalueEditor"/> class.
+        /// </summary>
+        /// <param name="dataType">Type of the data.</param>
+        public CFCMD_PrevalueEditor(BaseDataType dataType)
+            : base(dataType, DBTypes.Ntext)
+        {
+            // get PreValues, load them into the controls.
+            cfcmd_options = this.GetPreValueOptions<CFCMD_Options>();
+        }
+
+        /// <summary>
+        /// Saves the data-type PreValue options.
+        /// </summary>
+        public override void Save()
+        {
+            // set the options
+            var options = new CFCMD_Options()
+            {
+                Username = this.txtUsername.Text,
+                ApiKey = this.txtApiKey.Text,
+                DefaultContainer = ddlDefaultContainer.SelectedValue
+            };
+
+            // save the options as JSON
+            this.SaveAsJson(options);
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Web.UI.Control.Init"/> event.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> object that contains the event data.</param>
+        protected override void OnInit(EventArgs e)
+        {
+            base.OnInit(e);
+
+            this.EnsureChildControls();
+        }
+
+        /// <summary>
+        /// Creates child controls for this control
+        /// </summary>
+        protected override void CreateChildControls()
+        {
+            base.CreateChildControls();
+
+            // set-up child controls
+            this.txtUsername = new TextBox() { ID = "txtUsername", CssClass = "guiInputText umbEditorTextField" };
+            this.txtApiKey = new TextBox() { ID = "txtApiKey", CssClass = "guiInputText umbEditorTextField" };
+            this.ddlDefaultContainer = new DropDownList() { ID = "ddlDefaultContainer" };
+
+            this.ddlDefaultContainer.Items.Clear();
+            this.ddlDefaultContainer.Items.Add(string.Empty);
+            if (!string.IsNullOrEmpty(cfcmd_options.Username) && !string.IsNullOrEmpty(cfcmd_options.ApiKey))
+            {
+                Factory factory = new Factory(cfcmd_options.Username, cfcmd_options.ApiKey);
+                var containers = factory.GetAllContainersAsSimpleList();
+                foreach (string container in containers)
+                {
+                    this.ddlDefaultContainer.Items.Add(new ListItem(container, container));
+                }
+            }
+
+            // add the child controls
+            this.Controls.AddPrevalueControls(this.txtUsername, this.txtApiKey, this.ddlDefaultContainer);
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Web.UI.Control.Load"/> event.
+        /// </summary>
+        /// <param name="e">The <see cref="T:System.EventArgs"/> object that contains the event data.</param>
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+
+            // if the options are null, then load the defaults
+            if (cfcmd_options == null)
+            {
+                cfcmd_options = new CFCMD_Options(true);
+            }
+
+            // set the values
+            this.txtUsername.Text = cfcmd_options.Username;
+            this.txtApiKey.Text = cfcmd_options.ApiKey;
+            this.ddlDefaultContainer.SelectedValue = cfcmd_options.DefaultContainer;
+        }
+
+        /// <summary>
+        /// Renders the contents of the control to the specified writer. This method is used primarily by control developers.
+        /// </summary>
+        /// <param name="writer">A <see cref="T:System.Web.UI.HtmlTextWriter"/> that represents the output stream to render HTML content on the client.</param>
+        protected override void RenderContents(HtmlTextWriter writer)
+        {
+            // add property fields
+            writer.AddPrevalueHeading("Cloud Files API Settings", "Add your Rackspace Cloud Files API token and username here");
+            writer.AddPrevalueRow("Username:", this.txtUsername);
+            writer.AddPrevalueRow("API Token:", this.txtApiKey);
+            writer.AddPrevalueHeading("Container Settings", "Select your default container from the dropdown");
+            writer.AddPrevalueRow("Default Container <em>(optional)</em>:", this.ddlDefaultContainer);
+        }
+    }
+}

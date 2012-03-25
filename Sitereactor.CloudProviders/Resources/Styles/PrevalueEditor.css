@@ -1,0 +1,86 @@
+﻿/* Standard clearfix */
+.clearfix:after
+{
+	content: ".";
+	display: block;
+	clear: both;
+	visibility: hidden;
+	line-height: 0;
+	height: 0;
+}
+
+.clearfix
+{
+	display: inline-block;
+}
+
+html[xmlns] .clearfix
+{
+	display: block;
+}
+
+* html .clearfix
+{
+	height: 1%;
+}
+
+.uCloud
+{
+	background: transparent url(<%= WebResource("Sitereactor.CloudProviders.Resources.Images.PrevalueEditor_uCloudLogo.png")%>) no-repeat right 8px;
+	padding-top: 40px;
+}
+.uCloud .row
+{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+.uCloud .label
+{
+	float: left;
+	width: 120px;
+	margin-right: 10px;
+}
+.uCloud .field
+{
+	float: left;
+}
+
+.uCloud .description
+{
+	clear: left;
+	color: #666;
+	float: left;
+	font-style: italic;
+	margin: 3px 0 10px 130px;
+}
+
+.uCloud .note
+{
+	clear: right;
+	color: #666;
+	float: left;
+	font-style: italic;
+	margin: 5px 0 10px 10px;
+}
+
+/* validation */
+.uCloud .validator
+{
+	color: red;
+	display: block;
+	font-size: 11px;
+	margin-bottom: 3px;
+	margin-top: 3px;
+	visibility: visible;
+}
+
+/* headers */
+.uCloud h3
+{
+	clear: left;
+	color: #666;
+	float: left;
+	font-style: italic;
+	font-weight: bold;
+	margin: 3px 10px 10px 0;
+}

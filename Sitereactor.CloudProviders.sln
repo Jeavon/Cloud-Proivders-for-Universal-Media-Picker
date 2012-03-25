@@ -1,0 +1,90 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitereactor.CloudProviders", "Sitereactor.CloudProviders\Sitereactor.CloudProviders.csproj", "{A1C64F6F-1302-40C4-8DB8-3403769E70D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitereactor.CloudProviders.Amazon", "Sitereactor.CloudProviders.Amazon\Sitereactor.CloudProviders.Amazon.csproj", "{F981D899-3A03-4030-8C41-357D5CCB7966}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitereactor.CloudProviders.Amazon.DataTypes", "Sitereactor.CloudProviders.Amazon.DataTypes\Sitereactor.CloudProviders.Amazon.DataTypes.csproj", "{4660C2A2-E0DD-4ADF-8555-5990A7DFCC05}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitereactor.CloudProviders.Amazon.Ump", "Sitereactor.CloudProviders.Amazon.Ump\Sitereactor.CloudProviders.Amazon.Ump.csproj", "{85C6BCDF-0B2A-4EDE-802B-176142229758}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitereactor.CloudProviders.Azure", "Sitereactor.CloudProviders.Azure\Sitereactor.CloudProviders.Azure.csproj", "{9D4A60E2-0987-42E0-B485-C0197E91C4CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitereactor.CloudProviders.Azure.DataTypes", "Sitereactor.CloudProviders.Azure.DataTypes\Sitereactor.CloudProviders.Azure.DataTypes.csproj", "{5173F1DF-B346-4292-B60F-09EA77B170DA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitereactor.CloudProviders.Azure.Ump", "Sitereactor.CloudProviders.Azure.Ump\Sitereactor.CloudProviders.Azure.Ump.csproj", "{DAF1BDE8-196D-4AA3-9895-836FB51EF68C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitereactor.CloudProviders.CloudFiles", "Sitereactor.CloudProviders.CloudFiles\Sitereactor.CloudProviders.CloudFiles.csproj", "{EE7992DA-A7F7-496B-965B-ED359C4F2123}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitereactor.CloudProviders.CloudFiles.DataTypes", "Sitereactor.CloudProviders.CloudFiles.DataTypes\Sitereactor.CloudProviders.CloudFiles.DataTypes.csproj", "{7C1060F9-EBF9-4E42-9BDE-649F507D6CFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitereactor.CloudProviders.CloudFiles.Ump", "Sitereactor.CloudProviders.CloudFiles.Ump\Sitereactor.CloudProviders.CloudFiles.Ump.csproj", "{5930B802-2A33-4FA1-9BBD-0BB9E9805983}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sitereactor.CloudProviders.Tests", "Sitereactor.CloudProviders.Tests\Sitereactor.CloudProviders.Tests.csproj", "{7480D77C-50A4-453A-B0EF-0E3A4DD31B7B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{76ECF5EE-B9BC-4725-B370-DA4D5F6F2CB1}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+		Sitereactor.CloudProviders.vsmdi = Sitereactor.CloudProviders.vsmdi
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = Sitereactor.CloudProviders.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A1C64F6F-1302-40C4-8DB8-3403769E70D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1C64F6F-1302-40C4-8DB8-3403769E70D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1C64F6F-1302-40C4-8DB8-3403769E70D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1C64F6F-1302-40C4-8DB8-3403769E70D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F981D899-3A03-4030-8C41-357D5CCB7966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F981D899-3A03-4030-8C41-357D5CCB7966}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F981D899-3A03-4030-8C41-357D5CCB7966}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F981D899-3A03-4030-8C41-357D5CCB7966}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4660C2A2-E0DD-4ADF-8555-5990A7DFCC05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4660C2A2-E0DD-4ADF-8555-5990A7DFCC05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4660C2A2-E0DD-4ADF-8555-5990A7DFCC05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4660C2A2-E0DD-4ADF-8555-5990A7DFCC05}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85C6BCDF-0B2A-4EDE-802B-176142229758}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85C6BCDF-0B2A-4EDE-802B-176142229758}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85C6BCDF-0B2A-4EDE-802B-176142229758}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85C6BCDF-0B2A-4EDE-802B-176142229758}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D4A60E2-0987-42E0-B485-C0197E91C4CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D4A60E2-0987-42E0-B485-C0197E91C4CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D4A60E2-0987-42E0-B485-C0197E91C4CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D4A60E2-0987-42E0-B485-C0197E91C4CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5173F1DF-B346-4292-B60F-09EA77B170DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5173F1DF-B346-4292-B60F-09EA77B170DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5173F1DF-B346-4292-B60F-09EA77B170DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5173F1DF-B346-4292-B60F-09EA77B170DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAF1BDE8-196D-4AA3-9895-836FB51EF68C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAF1BDE8-196D-4AA3-9895-836FB51EF68C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAF1BDE8-196D-4AA3-9895-836FB51EF68C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAF1BDE8-196D-4AA3-9895-836FB51EF68C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE7992DA-A7F7-496B-965B-ED359C4F2123}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE7992DA-A7F7-496B-965B-ED359C4F2123}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE7992DA-A7F7-496B-965B-ED359C4F2123}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE7992DA-A7F7-496B-965B-ED359C4F2123}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C1060F9-EBF9-4E42-9BDE-649F507D6CFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C1060F9-EBF9-4E42-9BDE-649F507D6CFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C1060F9-EBF9-4E42-9BDE-649F507D6CFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C1060F9-EBF9-4E42-9BDE-649F507D6CFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5930B802-2A33-4FA1-9BBD-0BB9E9805983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5930B802-2A33-4FA1-9BBD-0BB9E9805983}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5930B802-2A33-4FA1-9BBD-0BB9E9805983}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5930B802-2A33-4FA1-9BBD-0BB9E9805983}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7480D77C-50A4-453A-B0EF-0E3A4DD31B7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7480D77C-50A4-453A-B0EF-0E3A4DD31B7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7480D77C-50A4-453A-B0EF-0E3A4DD31B7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7480D77C-50A4-453A-B0EF-0E3A4DD31B7B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
