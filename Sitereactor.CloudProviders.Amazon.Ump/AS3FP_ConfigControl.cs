@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using TheOutfield.UmbExt.UniversalMediaPicker.Controls;
@@ -15,7 +13,6 @@ namespace Sitereactor.CloudProviders.Amazon.Ump
         private readonly TextBox _accessKeyTextBox = new TextBox();
         private readonly TextBox _secretKeyTextBox = new TextBox();
         private readonly TextBox _cdnDomainTextBox = new TextBox();
-        private readonly ListBox _bucketsListBox = new ListBox();
 
         public AS3FP_ConfigControl(AS3FP_Provider provider, string options)
         {
@@ -33,10 +30,6 @@ namespace Sitereactor.CloudProviders.Amazon.Ump
                 _config.AccessKey = _accessKeyTextBox.Text;
                 _config.SecretKey = _secretKeyTextBox.Text;
                 _config.CdnDomain = _cdnDomainTextBox.Text;
-                _config.AllowedBuckets = _bucketsListBox.Items.Cast<ListItem>()
-                    .Where(item => item.Selected)
-                    .Select(item => item.Value)
-                    .ToList();
 
                 return _config.SerializeToJson();
             }
@@ -50,27 +43,6 @@ namespace Sitereactor.CloudProviders.Amazon.Ump
                 _accessKeyTextBox.Text = _config.AccessKey;
                 _secretKeyTextBox.Text = _config.SecretKey;
                 _cdnDomainTextBox.Text = _config.CdnDomain;
-
-                if(!string.IsNullOrEmpty(_config.AccessKey) && !string.IsNullOrEmpty(_config.SecretKey))
-                {
-                    var factory = new StorageFactory(_config.AccessKey, _config.SecretKey);
-                    var buckets = factory.GetAllBuckets();
-
-                    if (_config.AllowedBuckets == null)
-                    {
-                        _config.AllowedBuckets = new List<string>();
-                    }
-
-                    foreach (var bucket in buckets)
-                    {
-                        var item = new ListItem(bucket, bucket)
-                                       {
-                                           Selected = _config.AllowedBuckets.Contains(bucket)
-                                       };
-
-                        _bucketsListBox.Items.Add(item);
-                    }
-                }
             }
 
             base.OnLoad(e);
@@ -81,18 +53,14 @@ namespace Sitereactor.CloudProviders.Amazon.Ump
             _accessKeyTextBox.ID = "apiKeyTextBox";
             _secretKeyTextBox.ID = "secretKeyTextBox";
             _cdnDomainTextBox.ID = "cdnDomainTextBox";
-            _bucketsListBox.ID = "bucketsListBox";
 
             _accessKeyTextBox.CssClass = "guiInputText guiInputStandardSize";
             _secretKeyTextBox.CssClass = "guiInputText guiInputStandardSize";
             _cdnDomainTextBox.CssClass = "guiInputText guiInputStandardSize";
 
-            _bucketsListBox.SelectionMode = ListSelectionMode.Multiple;
-
             Controls.Add(_accessKeyTextBox);
             Controls.Add(_secretKeyTextBox);
             Controls.Add(_cdnDomainTextBox);
-            Controls.Add(_bucketsListBox);
         }
 
         protected override void Render(HtmlTextWriter writer)
@@ -101,7 +69,6 @@ namespace Sitereactor.CloudProviders.Amazon.Ump
             writer.AddFormRow("Access Key:", "Please enter your Amazon AWS Access key", _accessKeyTextBox);
             writer.AddFormRow("Secret Key:", "Please enter your Amazon AWS Secret Key", _secretKeyTextBox);
             writer.AddFormRow("Custom CDN Domain:", "Please enter Cloud Front domain mapped to your S3 storage", _cdnDomainTextBox);
-            writer.AddFormRow("Allowed Buckets:", "Select the buckets you want to use", _bucketsListBox);
         }
     }
 }

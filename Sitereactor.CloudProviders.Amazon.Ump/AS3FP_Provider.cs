@@ -59,54 +59,13 @@ namespace Sitereactor.CloudProviders.Amazon.Ump
             EnsureAmazonS3Connection();
             if (parentId == "-1")
             {
-                List<string> containers = _factory.GetAllBuckets();
-                //limit list of buckets to selected allowed ones if any exists in config
-                mediaItems.AddRange(_config.AllowedBuckets.Any()
-                                        ? containers.Where(x => _config.AllowedBuckets.Contains(x)).Select(
-                                            container => container.ContainerToMediaItemFolder())
-                                        : containers.Select(container => container.ContainerToMediaItemFolder()));
+                var containers = _factory.GetAllBuckets();
+                mediaItems.AddRange(containers.Select(container => container.ContainerToMediaItem()));
             }
             else
             {
-                if (parentId.Contains("/"))
-                {
-                    var list = parentId.Split('/');
-                    string bucketName = list[0];
-                    string currentPath = parentId.Substring(parentId.IndexOf('/') + 1);
-
-                    var items = _factory.GetAllObjectsByBucketName(bucketName);
-                    foreach (var item in items)
-                    {
-                        //This should be a file
-                        if (item.Key.Contains(currentPath) && item.Key.LastIndexOf('/') != item.Key.Length - 1)
-                        {
-                            //Match begining of file path
-                            if (currentPath.LastIndexOf('/') == item.Key.LastIndexOf('/'))
-                            {
-                                mediaItems.Add(GetMediaItemWithUrl(_config.CdnDomain, parentId, item.Key));
-                            }
-                        }
-                        //This should be a folder
-                        if (item.Key.StartsWith(currentPath) && item.Key.LastIndexOf('/') == item.Key.Length - 1 && !currentPath.Equals(item.Key))
-                        {
-                            var folders = item.Key.Split('/');
-                            var folderName = folders[folders.Length - 2];
-                            mediaItems.Add(item.Key.ItemToMediaItemFolder(folderName, bucketName));
-                        }
-                    }
-                }
-                else
-                {
-                    var items = _factory.GetAllObjectsByBucketName(parentId);
-
-                    mediaItems.AddRange(from item in items
-                                        where item.Key.Count(f => f == '/') == 1 && item.Key.LastIndexOf('/') == item.Key.Length - 1
-                                        select item.Key.ItemToMediaItemFolder(parentId));
-
-                    mediaItems.AddRange(from item in items
-                                        where item.Value != 0 && item.Key.Count(f => f == '/') == 0
-                                        select GetMediaItemWithUrl(_config.CdnDomain, parentId, item.Key));
-                }
+                var items = _factory.GetAllObjectsByBucketName(parentId);
+                mediaItems.AddRange(items.Select(item => GetMediaItemWithUrl(_config.CdnDomain, parentId, item.Key)));
             }
 
             return mediaItems;
@@ -114,6 +73,7 @@ namespace Sitereactor.CloudProviders.Amazon.Ump
 
         public override MediaItem GetMediaItemById(string id)
         {
+            // Connect to API, an retrive items
             int lastSlash = id.LastIndexOf("/") + 1;
             string itemName = id.Substring(lastSlash);
 
@@ -121,56 +81,20 @@ namespace Sitereactor.CloudProviders.Amazon.Ump
         }
         #endregion
 
-        public MediaItem CreateMediaItem(Stream fileStream, string fileName, string contentType, string bucketName)
+        public MediaItem CreateMediaItem(Stream fileStream, string fileName, string contentType, string container)
         {
             EnsureAmazonS3Connection();
 
-            _factory.CreateObject(bucketName, fileStream, contentType, fileName);
+            _factory.CreateObject(container, fileStream, contentType, fileName);
 
-            return GetMediaItemWithUrl(_config.CdnDomain, bucketName, fileName);
-        }
-
-        public void CreateFolderBeforeUpload(string folderName, string bucketName)
-        {
-            EnsureAmazonS3Connection();
-
-            var items = _factory.GetAllObjectsByBucketName(bucketName);
-            if(!items.ContainsKey(folderName))
-            {
-                _factory.CreateFolderAsObject(bucketName, folderName);
-            }
+            return GetMediaItemById(fileName);
         }
 
         public ListItem[] GetContainers()
         {
             EnsureAmazonS3Connection();
             List<string> containers = _factory.GetAllBuckets();
-
-            if (_config.AllowedBuckets.Any())
-            {
-                return containers.Where(x => _config.AllowedBuckets.Contains(x)).Select(
-                    container => new ListItem(container, container)).ToArray();
-            }
-
             return containers.Select(container => new ListItem(container, container)).ToArray();
-        }
-
-        public ListItem[] GetFolders()
-        {
-            EnsureAmazonS3Connection();
-            
-            List<ListItem> list = new List<ListItem>();
-            var buckets = _factory.GetAllBuckets();
-            foreach (var bucket in buckets)
-            {
-                var items = _factory.GetAllObjectsByBucketName(bucket);
-
-                list.AddRange(from item in items
-                              where item.Key.LastIndexOf('/') == item.Key.Length - 1
-                              select new ListItem(string.Concat(item, " - Bucket: ", bucket), item.Key));
-            }
-
-            return list.ToArray();
         }
 
         private void EnsureAmazonS3Connection()
@@ -181,9 +105,7 @@ namespace Sitereactor.CloudProviders.Amazon.Ump
 
         private static MediaItem GetMediaItemWithUrl(string customDomain, string bucketName, string itemName)
         {
-            string url = string.IsNullOrEmpty(customDomain) ? 
-                string.Format("http://{0}.s3.amazonaws.com/{1}", bucketName, itemName) : 
-                string.Concat(customDomain, "/", itemName);
+            string url = string.IsNullOrEmpty(customDomain) ? string.Format("http://{0}.s3.amazonaws.com/{1}", bucketName, itemName) : string.Concat(customDomain, "/", itemName);
             return itemName.UrlToMediaItem(url);
         }
     }

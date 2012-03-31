@@ -12,9 +12,10 @@ namespace Sitereactor.CloudProviders.Amazon.Ump
         private readonly AS3FP_Provider _provider;
         private AS3FP_Config _config;
         private readonly FileUpload _fileFileUpload = new FileUpload();
-        private readonly TextBox _folderTextBox = new TextBox();
+        private readonly TextBox _titleTextBox = new TextBox();
+        private readonly TextBox _descriptionTextBox = new TextBox();
+        private readonly TextBox _tagsTextBox = new TextBox();
         private readonly DropDownList _collectionsDropDownList = new DropDownList();
-        private readonly DropDownList _foldersDropDownList = new DropDownList();
 
         public AS3FP_CreateControl(AS3FP_Provider provider, string options)
         {
@@ -25,24 +26,30 @@ namespace Sitereactor.CloudProviders.Amazon.Ump
         protected override void CreateChildControls()
         {
             _fileFileUpload.ID = "fileFileUpload";
-            _folderTextBox.ID = "folderTextBox";
+            _titleTextBox.ID = "titleTextBox";
+            _descriptionTextBox.ID = "descriptionTextBox";
+            _tagsTextBox.ID = "tagsTextBox";
             _collectionsDropDownList.ID = "collectionsDropDownList";
-            _foldersDropDownList.ID = "foldersDropDownList";
 
             _fileFileUpload.CssClass = "guiInputText guiInputStandardSize";
-            _folderTextBox.CssClass = "guiInputText guiInputStandardSize";
+            _titleTextBox.CssClass = "guiInputText guiInputStandardSize";
+            _descriptionTextBox.CssClass = "guiInputText guiInputStandardSize";
+            _tagsTextBox.CssClass = "guiInputText guiInputStandardSize";
             _collectionsDropDownList.CssClass = "guiInputText guiInputStandardSize";
-            _foldersDropDownList.CssClass = "guiInputText guiInputStandardSize";
+
+            _descriptionTextBox.TextMode = TextBoxMode.MultiLine;
+            _tagsTextBox.TextMode = TextBoxMode.MultiLine;
 
             Controls.Add(_fileFileUpload);
-            Controls.Add(_folderTextBox);
+            Controls.Add(_titleTextBox);
+            Controls.Add(_descriptionTextBox);
+            Controls.Add(_tagsTextBox);
             Controls.Add(_collectionsDropDownList);
-            Controls.Add(_foldersDropDownList);
         }
 
         protected override void OnLoad(EventArgs e)
         {
-            if(!Page.IsPostBack)
+            if (!Page.IsPostBack)
             {
                 BindCollections();
             }
@@ -53,22 +60,17 @@ namespace Sitereactor.CloudProviders.Amazon.Ump
         protected void BindCollections()
         {
             _collectionsDropDownList.Items.Clear();
-            _collectionsDropDownList.Items.Add(new ListItem("", ""));
+            _collectionsDropDownList.Items.Add(new ListItem("None", ""));
             _collectionsDropDownList.Items.AddRange(_provider.GetContainers());
-            _collectionsDropDownList.DataBind();
-
-            _foldersDropDownList.Items.Clear();
-            _foldersDropDownList.Items.Add(new ListItem("Root", ""));
-            _foldersDropDownList.Items.AddRange(_provider.GetFolders());
-            _foldersDropDownList.DataBind();
         }
 
         protected override void Render(HtmlTextWriter writer)
         {
-            writer.AddFormRow("File*:", _fileFileUpload);
-            writer.AddFormRow("Bucket*:", _collectionsDropDownList);
-            writer.AddFormRow("Parent Folder:", _foldersDropDownList);
-            writer.AddFormRow("New Folder:", _folderTextBox);
+            writer.AddFormRow("File:", _fileFileUpload);
+            writer.AddFormRow("Container:", _collectionsDropDownList);
+            writer.AddFormRow("Title:", _titleTextBox);
+            writer.AddFormRow("Description:", _descriptionTextBox);
+            writer.AddFormRow("Tags:", "Separated with commas", _tagsTextBox);
         }
 
         #region Overrides of AbstractCreateControl
@@ -77,38 +79,11 @@ namespace Sitereactor.CloudProviders.Amazon.Ump
         {
             EnsureChildControls();
 
-            if (string.IsNullOrEmpty(_collectionsDropDownList.SelectedValue))
-            {
-                message = "No Bucket was selected. Please select a bucket and try again.";
-                savedMediaItem = null;
-                return false;
-            }
-
             if (_fileFileUpload.HasFile)
             {
                 try
                 {
-                    string folder = _folderTextBox.Text;
-                    string fileName = _fileFileUpload.FileName;
-                    string parentFolder = _foldersDropDownList.SelectedValue;
-
-                    if (!string.IsNullOrEmpty(folder))
-                    {
-                        fileName = folder.LastIndexOf('/') == folder.Length - 1
-                                       ? string.Concat(parentFolder, folder, _fileFileUpload.FileName)
-                                       : string.Concat(parentFolder, folder, "/", _fileFileUpload.FileName);
-
-                        _provider.CreateFolderBeforeUpload(fileName.Replace(_fileFileUpload.FileName, ""), _collectionsDropDownList.SelectedValue);
-                    }
-                    else if(!string.IsNullOrEmpty(parentFolder))
-                    {
-                        fileName = string.Concat(parentFolder, _fileFileUpload.FileName);
-                    }
-
-                    savedMediaItem = _provider.CreateMediaItem(_fileFileUpload.FileContent, 
-                        fileName, 
-                        _fileFileUpload.PostedFile.ContentType, 
-                        _collectionsDropDownList.SelectedValue);
+                    savedMediaItem = _provider.CreateMediaItem(_fileFileUpload.FileContent, _fileFileUpload.FileName, _fileFileUpload.PostedFile.ContentType, _collectionsDropDownList.SelectedValue);
 
                     message = "File created successfully";
 

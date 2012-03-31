@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Amazon.S3;
@@ -14,6 +15,7 @@ namespace Sitereactor.CloudProviders.Amazon
 
         public StorageFactory(string accessKeyID, string secretAccessKeyID)
         {
+            
             _client = GetAmazonS3Client(accessKeyID, secretAccessKeyID);
             _accessKeyID = accessKeyID;
             _secretAccessKeyID = secretAccessKeyID;
@@ -34,9 +36,28 @@ namespace Sitereactor.CloudProviders.Amazon
 
         public Dictionary<string, long> GetAllObjectsByBucketName(string bucketName)
         {
-            ListObjectsRequest request = new ListObjectsRequest {BucketName = bucketName};
-            ListObjectsResponse response = _client.ListObjects(request);
-            return response.S3Objects.ToDictionary(o => o.Key, o => o.Size);
+            var s3Objects = new List<S3Object>();
+
+            var results = this._client.ListObjects(new ListObjectsRequest()
+            {
+                BucketName = bucketName
+            });
+
+            s3Objects.AddRange(results.S3Objects);
+
+            // Keep getting results until there are no more. 
+            // The default implementation only returns 1000 objects.
+            while (results.IsTruncated)
+            {
+                results = this._client.ListObjects(new ListObjectsRequest()
+                {
+                    BucketName = bucketName,
+                    Marker = s3Objects.Last().Key
+                });
+                s3Objects.AddRange(results.S3Objects);
+            }
+
+            return s3Objects.ToDictionary((o => o.Key), (Func<S3Object, long>)(o => o.Size));
         }
 
         public string GetObjectInformation(string bucketName, string objectKey)
@@ -83,28 +104,6 @@ namespace Sitereactor.CloudProviders.Amazon
                 .WithContentType(contentType)
                 .WithBucketName(bucketName);
             request.WithInputStream(fileStream);
-            request.CannedACL = S3CannedACL.PublicRead;
-
-            S3Response response = _client.PutObject(request);
-            response.Dispose();
-        }
-
-        public void CreateFolderAsObject(string bucketName, string objectKey)
-        {
-            bool create = true;
-            var list = GetAllObjectsByBucketName(bucketName);
-            foreach (var o in list)
-            {
-                if(o.Equals(objectKey))
-                { create = false; }
-            }
-
-            if (!create) return;
-
-            PutObjectRequest request = new PutObjectRequest();
-            request.WithBucketName(bucketName)
-                .WithKey(objectKey);
-            request.InputStream = new MemoryStream();
             request.CannedACL = S3CannedACL.PublicRead;
 
             S3Response response = _client.PutObject(request);

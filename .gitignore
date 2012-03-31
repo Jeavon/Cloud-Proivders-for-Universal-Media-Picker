@@ -35,7 +35,9 @@ Ankh.NoLoad
 *.suo
 _ReSharper.*
 *.resharper
+*.ncrunchproject
 *.ncrunchsolution
+*.ncrunchsolution.user
 
 #NuGet
 packages/
