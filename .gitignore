@@ -38,6 +38,3 @@ _ReSharper.*
 *.ncrunchproject
 *.ncrunchsolution
 *.ncrunchsolution.user
-
-#NuGet
-packages/
